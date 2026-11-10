@@ -23,6 +23,10 @@ public final class SkipCommand implements BasicCommand {
             live.messages().send(source.getSender(), "welcome.only-a-player");
             return;
         }
+        if (!live.onWelcomeServer()) {
+            live.messages().send(player, "welcome.only-on-welcome");
+            return;
+        }
         live.welcome().sendOn(player);
     }
 }

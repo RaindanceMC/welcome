@@ -32,6 +32,10 @@ public final class IntroCommand implements BasicCommand {
             live.messages().send(source.getSender(), "welcome.only-a-player");
             return;
         }
+        if (!live.onWelcomeServer()) {
+            live.messages().send(player, "welcome.only-on-welcome");
+            return;
+        }
         String first = args.length == 0 ? "" : args[0].toLowerCase(Locale.ROOT);
         if (first.equals("play")) {
             live.intro().play(player, () -> live.messages().send(player, "welcome.intro-over"));

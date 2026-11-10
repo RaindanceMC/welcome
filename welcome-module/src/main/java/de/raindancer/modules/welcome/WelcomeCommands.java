@@ -3,6 +3,8 @@ package de.raindancer.modules.welcome;
 import de.raindancer.modules.api.ModuleCommand;
 import de.raindancer.modules.welcome.command.IntroCommand;
 import de.raindancer.modules.welcome.command.SkipCommand;
+import de.raindancer.modules.welcome.command.TrailerCommand;
+import de.raindancer.modules.welcome.command.TutorialCommand;
 import de.raindancer.modules.welcome.command.WelcomeCommand;
 import de.raindancer.modules.welcome.util.PermissionNodes;
 
@@ -21,6 +23,12 @@ public final class WelcomeCommands {
 
     public static List<ModuleCommand> declared() {
         return List.of(
+                ModuleCommand.of("trailer", "Shows the Hyades trailer — the intro newcomers see",
+                        new TrailerCommand(WelcomeCommands::require)),
+                ModuleCommand.of("tutorial", "Starts the tour of the island with your guide",
+                        new TutorialCommand(WelcomeCommands::require))
+                        .taking("(nothing) — start it", "next — the next station", "stop",
+                                "start set | station set|remove|list <id> | island generate — staff"),
                 ModuleCommand.of("skip", "Skips the welcome and takes you on to the network",
                         new SkipCommand(WelcomeCommands::require)).aliased("continue"),
                 ModuleCommand.of("welcome", "Shows the welcome as a newcomer gets it",

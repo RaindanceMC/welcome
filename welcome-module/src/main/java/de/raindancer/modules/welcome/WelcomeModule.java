@@ -9,7 +9,12 @@ import de.raindancer.modules.api.FlexModule;
 import de.raindancer.modules.api.ModuleCommand;
 import de.raindancer.modules.api.ModuleContext;
 import de.raindancer.modules.api.ModuleInfo;
+import de.raindancer.modules.welcome.listener.TutorialListener;
 import de.raindancer.modules.welcome.listener.WelcomeListener;
+import de.raindancer.modules.welcome.service.TutorialService;
+import de.raindancer.modules.welcome.store.TutorialPlaces;
+import de.raindancer.modules.welcome.tutorial.IslandBuilder;
+import de.raindancer.modules.welcome.rules.Role;
 import de.raindancer.modules.welcome.service.IntroService;
 import de.raindancer.modules.welcome.store.IntroShots;
 import de.raindancer.modules.welcome.service.WelcomeService;
@@ -26,7 +31,7 @@ import java.util.List;
  */
 public final class WelcomeModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("welcome", "Welcome", "0.2.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("welcome", "Welcome", "0.3.0")
             .describedAs("Greets players new to the network and sends them on")
             .by("Raindancer118");
 
@@ -43,6 +48,14 @@ public final class WelcomeModule implements FlexModule {
         context.core().messages().seriousFrom(WelcomeModule.class.getResourceAsStream("messages-serious.yml"));
         PermissionNodes.register(context.plugin().getServer());
         ProxyTransfer.register(context.plugin());
+        java.util.function.Consumer<org.bukkit.entity.Player> toWelcomeServer = player -> ProxyTransfer.send(
+                context.plugin(), player, settings.current().welcomeServer().strip());
+        if (Role.of(settings.current().role()) == Role.NETWORK) {
+            WelcomeCommands.ready(new WelcomeServices(context.core().messages(), null, null, null, null, toWelcomeServer));
+            context.log().info("Welcome on a network server: /trailer sends players to {}.",
+                    settings.current().welcomeServer());
+            return;
+        }
 
         WelcomeService welcome = new WelcomeService(context.plugin(), settings::current, context.core().messages(),
                 System::currentTimeMillis);
@@ -54,8 +67,17 @@ public final class WelcomeModule implements FlexModule {
                 System::currentTimeMillis);
         context.closeWith(intro::close);
         welcome.intro(intro);
+        IslandBuilder island = new IslandBuilder(context.plugin(), player -> player.hasPermission(PermissionNodes.STAY));
+        island.loadIfThere();
+        TutorialService tutorial = new TutorialService(context.plugin(),
+                TutorialPlaces.at(context.plugin().getDataFolder().toPath().resolve("tutorial.yml")), settings::current,
+                context.core().messages(), context.core().actionBars(), welcome);
+        context.closeWith(tutorial::close);
+        welcome.tutorial(tutorial);
         context.listener(new WelcomeListener(welcome));
-        WelcomeCommands.ready(new WelcomeServices(context.core().messages(), welcome, intro));
+        context.listener(new TutorialListener(tutorial));
+        WelcomeCommands.ready(new WelcomeServices(context.core().messages(), welcome, intro, tutorial, island,
+                toWelcomeServer));
         WelcomeSettings now = settings.current();
         if (!now.enabled()) {
             context.log().info("Welcome is up but switched off: arrivals just stand here.");
@@ -64,6 +86,9 @@ public final class WelcomeModule implements FlexModule {
             context.log().info(intro.wouldPlay() ? "Intro: {} shot(s), {} track(s) of music."
                     : "Intro: {} shot(s) — record at least two with /intro shot add; {} track(s) of music.",
                     intro.shots().all().size(), tracks.size());
+            context.log().info(tutorial.ready() ? "Tutorial: {} station(s) placed."
+                    : "Tutorial: {} station(s) placed, not ready — /tutorial island generate, or /tutorial start set "
+                    + "and /tutorial station set <id>.", tutorial.places().stations().size());
         }
     }
 

@@ -36,6 +36,7 @@ public final class WelcomeService {
     private final LongSupplier clock;
     private final Map<UUID, Long> sentAt = new ConcurrentHashMap<>();
     private volatile IntroService intro;
+    private volatile TutorialService tutorial;
 
     public WelcomeService(Plugin plugin, Supplier<WelcomeSettings> settings, Messages messages, LongSupplier clock) {
         this.plugin = plugin;
@@ -47,6 +48,11 @@ public final class WelcomeService {
     /** The intro newcomers watch first, if any. */
     public void intro(IntroService intro) {
         this.intro = intro;
+    }
+
+    /** The tour the welcome window offers, if any. */
+    public void tutorial(TutorialService tutorial) {
+        this.tutorial = tutorial;
     }
 
     public Verdict verdict(Player player) {
@@ -79,12 +85,17 @@ public final class WelcomeService {
     }
 
     private void offer(Player player) {
-        if (!player.isOnline()) {
+        TutorialService touring = tutorial;
+        // Already on the tour by the time the window was due: it would only cover the guide.
+        if (!player.isOnline() || touring != null && touring.running(player)) {
             return;
         }
-        DialogPage.titled(plain("welcome.window-title"))
-                .text(mini("welcome.window-text"))
-                .button(plain("welcome.button-go"), plain("welcome.button-go-hint"), answers -> sendOn(player))
+        TutorialService tour = tutorial;
+        DialogPage page = DialogPage.titled(plain("welcome.window-title")).text(mini("welcome.window-text"));
+        if (tour != null && tour.ready()) {
+            page.button(plain("welcome.button-tour"), plain("welcome.button-tour-hint"), answers -> tour.start(player));
+        }
+        page.button(plain("welcome.button-go"), plain("welcome.button-go-hint"), answers -> sendOn(player))
                 .show(player);
         messages.send(player, "welcome.chat-hint");
     }

@@ -28,6 +28,10 @@ public final class WelcomeCommand implements BasicCommand {
             live.messages().send(source.getSender(), "welcome.only-a-player");
             return;
         }
+        if (!live.onWelcomeServer()) {
+            live.messages().send(player, "welcome.only-on-welcome");
+            return;
+        }
         String option = args.length == 0 ? "preview" : args[0].toLowerCase(Locale.ROOT);
         switch (option) {
             case "preview" -> live.welcome().greet(player);

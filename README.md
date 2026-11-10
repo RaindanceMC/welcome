@@ -5,7 +5,9 @@
 
 Sending on is Core's `ProxyTransfer` (the proxy's plugin-message channel; Velocity needs `bungee-plugin-message-channel = true`), so it needs no shared database. `/skip` (`/continue`) for everyone; `/welcome preview | status` for staff (`rainswelcome.admin`). Staff and builders (`rainswelcome.stay`) are never welcomed or sent on. Settings page "Welcome server".
 
-Coming next: a cinematic intro and a tutorial island with a guide.
+Intro: newcomers first watch a camera flight through shots staff record (`/intro shot add "Title | subtitle"`), with music from `plugins/RainsWelcome/music` (Core's MusicPack), sneak skips; `/trailer` shows it again — on a network server (setting `role: network`, e.g. the SMP) it sends players over to the welcome server.
+
+Tutorial: `/tutorial` (or "Show me around first" in the welcome window) — a guide (Core's `Guide`, only that player sees it) walks the player round nine stations on the tutorial island (money, cosmetics, claims, homes, travel, jobs, skills, guilds, rules), explains each in a native dialog and waits while they try it (`/balance`, `/cosmetics`, `/claim`, …). `/tutorial next` skips a stop, `/tutorial stop`. Staff: `/tutorial island generate` builds a ready island in its own world (`tutorial`, locked, void below — falling off puts you back at the start), or `/tutorial start set` + `/tutorial station set <id>` on a build of your own.
 
 Part of [RaindanceMC](https://github.com/RaindanceMC); built on [RainsCore](https://github.com/RaindanceMC/RainsCore) and the shared parent in [framework](https://github.com/RaindanceMC/framework).
 
@@ -19,7 +21,7 @@ Needs Java 25 and read access to `packages.tstieh.de` (server ids `packages-rele
 
 ## Plugins
 
-- `welcome-standalone/target/RainsWelcome-0.1.0.jar` — needs RainsCore 2.81.0 or newer
+- `welcome-standalone/target/RainsWelcome-0.3.0.jar` — needs RainsCore 2.83.0 or newer
 
 ## Versions
 

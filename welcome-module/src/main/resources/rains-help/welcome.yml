@@ -9,7 +9,7 @@ order: 5
 module: welcome
 aliases: [welcome, skip, newcomer, start]
 keywords: [welcome, skip, start, new, tutorial, intro, cinematic, shots]
-commands: [skip, welcome, intro]
+commands: [skip, welcome, intro, trailer, tutorial]
 sections:
   - question: How do I get to Hyades?
     title: Going on
@@ -24,7 +24,16 @@ sections:
     title: The intro
     when: welcome:intro-enabled
     text: |
-      Newcomers first watch a short camera flight across Hyades, with music, before the welcome window. Sneak to skip it.
+      Newcomers first watch a short camera flight across Hyades, with music, before the welcome window. Sneak to skip it. {run:/trailer} shows it again at any time — from Hyades it takes you over to the welcome server, and back with the button or /skip.
+  - question: What is the tour?
+    title: The tour
+    when: welcome:tutorial-enabled
+    text: |
+      {run:/tutorial} — your guide walks you round the island and shows you money, cosmetics, claims, homes, travel, jobs, skills, guilds and the rules. Try each thing as you go; <white>/tutorial next</white> skips a stop, {run:/skip} ends the tour and takes you to Hyades. Nothing you do here comes with you.
+  - question: How do staff set up the tour?
+    title: Setting up the tour
+    text: |
+      {run:/tutorial island generate} builds a ready island in a world of its own, with its start and every station. Or set them where you like: {run:/tutorial start set} and <white>/tutorial station set <id></white>, {run:/tutorial station list} shows them.
   - question: How do staff make the intro?
     title: Recording the intro
     text: |

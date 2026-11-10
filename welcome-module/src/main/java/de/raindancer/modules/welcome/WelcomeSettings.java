@@ -15,6 +15,18 @@ import org.bukkit.Material;
 })
 public record WelcomeSettings(
 
+        @In("welcome") @Title("This server is")
+        @Describe("welcome: the welcome server itself — greets newcomers, plays the intro, runs the tutorial. network: "
+                + "any other server of the network (the SMP): only /trailer, which sends players to the welcome "
+                + "server to watch the intro. Takes effect at the next restart.")
+        @Key("role")
+        String role,
+
+        @In("welcome") @Title("The welcome server")
+        @Describe("Where /trailer sends players from a network server — its name in the proxy's velocity.toml.")
+        @Key("welcome-server")
+        String welcomeServer,
+
         @In("welcome") @Title("Welcome on")
         @Describe("Whether players arriving here are welcomed and offered the way on to the network. Off, they "
                 + "just stand here.")
@@ -59,7 +71,25 @@ public record WelcomeSettings(
         @Describe("Shown under the intro while it plays — the credit a Creative Commons Attribution (CC-BY) track "
                 + "asks for, e.g. Music: Rise of Spirit by Alexandr Zhelanov (CC-BY 3.0). Empty shows none.")
         @Key("music-credit")
-        String musicCredit) {
+        String musicCredit,
 
-    public static final WelcomeSettings DEFAULTS = new WelcomeSettings(true, "smp", 2, true, true, 6, "custom", "");
+        @In("welcome") @Title("Tutorial on")
+        @Describe("Whether the welcome window offers the tour of the tutorial island, where a guide walks newcomers "
+                + "round the stations. Needs a start and at least one station (/tutorial island generate, or "
+                + "/tutorial start set and /tutorial station set <id>).")
+        @Key("tutorial-enabled")
+        boolean tutorialEnabled,
+
+        @In("welcome") @Title("The guide's name")
+        @Key("guide-name")
+        @Describe("What the tutorial's guide is called.")
+        String guideName,
+
+        @In("welcome") @Title("The guide's skin")
+        @Describe("A player name whose skin the guide wears, or a MineSkin skin (mineskin:<id>). Empty: a suit.")
+        @Key("guide-skin")
+        String guideSkin) {
+
+    public static final WelcomeSettings DEFAULTS = new WelcomeSettings("welcome", "welcome", true, "smp", 2, true,
+            true, 6, "custom", "", true, "Iris", "");
 }

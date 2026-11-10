@@ -31,7 +31,7 @@ import java.util.List;
  */
 public final class WelcomeModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("welcome", "Welcome", "0.4.1")
+    private static final ModuleInfo INFO = ModuleInfo.of("welcome", "Welcome", "0.4.2")
             .describedAs("Greets players new to the network and sends them on")
             .by("Raindancer118");
 

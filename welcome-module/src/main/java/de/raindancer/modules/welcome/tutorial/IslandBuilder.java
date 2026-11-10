@@ -5,6 +5,7 @@ import de.raindancer.core.world.manage.VoidGenerator;
 import de.raindancer.core.world.protection.LockedWorlds;
 import de.raindancer.modules.welcome.store.TutorialPlaces;
 import de.raindancer.modules.welcome.store.TutorialPlaces.Place;
+import de.raindancer.core.world.manage.WorldFolders;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,7 +16,6 @@ import org.bukkit.WorldType;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
 
-import java.io.File;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,7 +44,7 @@ public final class IslandBuilder {
 
     /** The world, if it was made before — loaded with its void generator, locked. */
     public World loadIfThere() {
-        if (!new File(plugin.getServer().getWorldContainer(), WORLD).isDirectory()) {
+        if (!WorldFolders.exists(plugin.getServer(), WORLD)) {
             return null;
         }
         return create();

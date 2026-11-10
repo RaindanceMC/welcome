@@ -33,7 +33,16 @@ public final class TutorialCommand implements BasicCommand {
     public void execute(CommandSourceStack source, String[] args) {
         WelcomeServices live = services.get();
         if (!(source.getSender() instanceof Player player)) {
-            live.messages().send(source.getSender(), "welcome.only-a-player");
+            // The island needs nobody standing anywhere, so the console can build it before anyone joins.
+            if (live.onWelcomeServer() && args.length == 2 && args[0].equalsIgnoreCase("island")
+                    && args[1].equalsIgnoreCase("generate")) {
+                var console = source.getSender();
+                live.messages().send(console, "welcome.tutorial-island-building");
+                live.island().build(live.tutorial().places(),
+                        () -> live.messages().send(console, "welcome.tutorial-island-built"));
+            } else {
+                live.messages().send(source.getSender(), "welcome.only-a-player");
+            }
             return;
         }
         if (!live.onWelcomeServer()) {

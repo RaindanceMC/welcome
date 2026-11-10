@@ -28,7 +28,8 @@
         <!-- 0.3.0: the tutorial island with a walking guide, /trailer (also from the network). -->
         <!-- 0.3.1: the guide wears an explorer skin by default. -->
         <!-- 0.4.0: /tutorial on a network server sends you straight into the tour (Core 2.84.0 Handoff). -->
-        <plugin.version>0.4.0</plugin.version>
+        <!-- 0.4.1: /tutorial island generate from the console. -->
+        <plugin.version>0.4.1</plugin.version>
     </properties>
 
     <dependencies>

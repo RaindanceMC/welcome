@@ -1,25 +1,32 @@
 package de.raindancer.modules.welcome;
 
+import de.raindancer.core.content.music.MusicPack;
+import de.raindancer.core.content.music.Track;
 import de.raindancer.core.data.settings.SettingsStore;
+import de.raindancer.core.ui.camera.Cutscenes;
 import de.raindancer.core.platform.proxy.ProxyTransfer;
 import de.raindancer.modules.api.FlexModule;
 import de.raindancer.modules.api.ModuleCommand;
 import de.raindancer.modules.api.ModuleContext;
 import de.raindancer.modules.api.ModuleInfo;
 import de.raindancer.modules.welcome.listener.WelcomeListener;
+import de.raindancer.modules.welcome.service.IntroService;
+import de.raindancer.modules.welcome.store.IntroShots;
 import de.raindancer.modules.welcome.service.WelcomeService;
 import de.raindancer.modules.welcome.util.PermissionNodes;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
- * The welcome server: newcomers — sent here by the proxy because the network has never seen them — are greeted
- * and sent on to the network when they are done, or at once with /skip. Runs on a database of its own, so
+ * The welcome server: newcomers — sent here by the proxy because the network has never seen them — watch the intro
+ * (a camera flight through the shots staff recorded, with the welcome music), are greeted and sent on to the
+ * network when they are done, or at once with /skip. Runs on a database of its own, so
  * whatever they try here stays here.
  */
 public final class WelcomeModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("welcome", "Welcome", "0.1.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("welcome", "Welcome", "0.2.0")
             .describedAs("Greets players new to the network and sends them on")
             .by("Raindancer118");
 
@@ -39,13 +46,38 @@ public final class WelcomeModule implements FlexModule {
 
         WelcomeService welcome = new WelcomeService(context.plugin(), settings::current, context.core().messages(),
                 System::currentTimeMillis);
+        List<Track> tracks = music(context);
+        Cutscenes cutscenes = new Cutscenes(context.plugin());
+        IntroService intro = new IntroService(context.plugin(), cutscenes,
+                IntroShots.at(context.plugin().getDataFolder().toPath().resolve("intro.yml")), settings::current,
+                context.core().messages(), context.core().actionBars(), context.core().resourcePacks(), () -> tracks,
+                System::currentTimeMillis);
+        context.closeWith(intro::close);
+        welcome.intro(intro);
         context.listener(new WelcomeListener(welcome));
-        WelcomeCommands.ready(new WelcomeServices(context.core().messages(), welcome));
+        WelcomeCommands.ready(new WelcomeServices(context.core().messages(), welcome, intro));
         WelcomeSettings now = settings.current();
         if (!now.enabled()) {
             context.log().info("Welcome is up but switched off: arrivals just stand here.");
         } else {
             context.log().info("Welcome is up: newcomers are greeted and sent on to {}.", now.nextServer());
+            context.log().info(intro.wouldPlay() ? "Intro: {} shot(s), {} track(s) of music."
+                    : "Intro: {} shot(s) — record at least two with /intro shot add; {} track(s) of music.",
+                    intro.shots().all().size(), tracks.size());
+        }
+    }
+
+    /** plugins/RainsWelcome/music, offered to the server's resource pack. */
+    private static List<Track> music(ModuleContext context) {
+        try {
+            MusicPack pack = MusicPack.offer(context.plugin(), context.core().resourcePacks(), "Welcome", "rainswelcome",
+                    "Rain's Welcome — music");
+            context.closeWith(pack::withdraw);
+            return pack.tracks();
+        } catch (IOException failure) {
+            context.log().warn("The welcome music could not be read ({}); the intro plays the game's menu music.",
+                    failure.getMessage());
+            return List.of();
         }
     }
 

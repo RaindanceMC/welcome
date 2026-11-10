@@ -21,7 +21,7 @@ import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
 /**
- * The welcome server's side of a newcomer's first minutes: greeted on arrival, then sent on to the network
+ * The welcome server's side of a newcomer's first minutes: the intro, greeted, then sent on to the network
  * through the proxy when they choose to go — or at once with /skip. The proxy sends only players the network has
  * never seen here; this server runs on a database of its own, so nothing done here follows them.
  */
@@ -35,12 +35,18 @@ public final class WelcomeService {
     private final Messages messages;
     private final LongSupplier clock;
     private final Map<UUID, Long> sentAt = new ConcurrentHashMap<>();
+    private volatile IntroService intro;
 
     public WelcomeService(Plugin plugin, Supplier<WelcomeSettings> settings, Messages messages, LongSupplier clock) {
         this.plugin = plugin;
         this.settings = settings;
         this.messages = messages;
         this.clock = clock;
+    }
+
+    /** The intro newcomers watch first, if any. */
+    public void intro(IntroService intro) {
+        this.intro = intro;
     }
 
     public Verdict verdict(Player player) {
@@ -56,7 +62,12 @@ public final class WelcomeService {
         if (verdict(player) != Verdict.WELCOME) {
             return;
         }
-        greet(player);
+        IntroService first = intro;
+        if (first == null) {
+            greet(player);
+        } else {
+            first.await(player, () -> greet(player));
+        }
     }
 
     /** The title, then the welcome window once the world has loaded behind it. */

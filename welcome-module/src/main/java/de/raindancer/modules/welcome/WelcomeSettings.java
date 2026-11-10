@@ -34,7 +34,32 @@ public record WelcomeSettings(
         @In("welcome") @Title("Keep newcomers safe")
         @Describe("Whether newcomers here take no damage and get no hungrier. Staff are never protected.")
         @Key("protect")
-        boolean protect) {
+        boolean protect,
 
-    public static final WelcomeSettings DEFAULTS = new WelcomeSettings(true, "smp", 2, true);
+        @In("welcome") @Title("Intro on")
+        @Describe("Whether newcomers watch the intro — a camera flight through the shots recorded with /intro shot "
+                + "add — before the welcome window. Needs at least two shots; sneaking skips it.")
+        @Key("intro-enabled")
+        boolean introEnabled,
+
+        @In("welcome") @Title("Seconds from shot to shot") @Range(min = 2, max = 30)
+        @Describe("How long the camera glides from one shot to the next. Slower looks calmer.")
+        @Key("seconds-per-shot")
+        int secondsPerShot,
+
+        @In("welcome") @Title("Intro music")
+        @Describe("custom: the server's own tracks — every .ogg (Vorbis) in plugins/RainsWelcome/music, shuffled; "
+                + "they reach players through the resource pack, and whoever has no pack hears the game's menu "
+                + "music instead. Or a sound key like minecraft:music.menu. Empty plays nothing. New tracks are "
+                + "picked up at the next restart.")
+        @Key("music")
+        String music,
+
+        @In("welcome") @Title("Music credit")
+        @Describe("Shown under the intro while it plays — the credit a Creative Commons Attribution (CC-BY) track "
+                + "asks for, e.g. Music: Rise of Spirit by Alexandr Zhelanov (CC-BY 3.0). Empty shows none.")
+        @Key("music-credit")
+        String musicCredit) {
+
+    public static final WelcomeSettings DEFAULTS = new WelcomeSettings(true, "smp", 2, true, true, 6, "custom", "");
 }

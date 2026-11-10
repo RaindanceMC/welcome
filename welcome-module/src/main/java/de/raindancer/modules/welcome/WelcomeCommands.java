@@ -1,6 +1,7 @@
 package de.raindancer.modules.welcome;
 
 import de.raindancer.modules.api.ModuleCommand;
+import de.raindancer.modules.welcome.command.IntroCommand;
 import de.raindancer.modules.welcome.command.SkipCommand;
 import de.raindancer.modules.welcome.command.WelcomeCommand;
 import de.raindancer.modules.welcome.util.PermissionNodes;
@@ -25,6 +26,11 @@ public final class WelcomeCommands {
                 ModuleCommand.of("welcome", "Shows the welcome as a newcomer gets it",
                         new WelcomeCommand(WelcomeCommands::require))
                         .taking("preview — the welcome as a newcomer gets it", "status — what happens to you here")
+                        .needing(PermissionNodes.ADMIN),
+                ModuleCommand.of("intro", "Records the intro's shots, or plays it",
+                        new IntroCommand(WelcomeCommands::require))
+                        .taking("shot add <caption> — where you stand and look, \"Title | subtitle\"",
+                                "shot list | remove <n> | move <from> <to>", "play — watch it")
                         .needing(PermissionNodes.ADMIN));
     }
 

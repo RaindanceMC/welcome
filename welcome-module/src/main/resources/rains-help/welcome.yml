@@ -8,8 +8,8 @@ category: Getting around
 order: 5
 module: welcome
 aliases: [welcome, skip, newcomer, start]
-keywords: [welcome, skip, start, new, tutorial, intro]
-commands: [skip, welcome]
+keywords: [welcome, skip, start, new, tutorial, intro, cinematic, shots]
+commands: [skip, welcome, intro]
 sections:
   - question: How do I get to Hyades?
     title: Going on
@@ -20,6 +20,15 @@ sections:
     title: A place of its own
     text: |
       No. This server keeps its own records: money, homes or anything else you try here stays here, and you start fresh on Hyades.
+  - question: What is the intro?
+    title: The intro
+    when: welcome:intro-enabled
+    text: |
+      Newcomers first watch a short camera flight across Hyades, with music, before the welcome window. Sneak to skip it.
+  - question: How do staff make the intro?
+    title: Recording the intro
+    text: |
+      Stand where a shot should be and look the way it should look, then {run:/intro shot add Title | subtitle}. {run:/intro shot list} shows them in order; <white>/intro shot remove <n></white> and <white>/intro shot move <from> <to></white> change them; {run:/intro play} watches it. The camera glides {setting:welcome:seconds-per-shot|seconds} from shot to shot. Music: every .ogg in plugins/RainsWelcome/music.
   - question: What can staff do here?
     title: For staff
     text: |

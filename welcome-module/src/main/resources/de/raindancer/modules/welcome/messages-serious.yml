@@ -1,0 +1,3 @@
+# The serious wording for this module: only the lines that differ from messages.yml.
+welcome:
+  not-moved: "<yellow>The server is not reachable right now. Try /skip again shortly.</yellow>"

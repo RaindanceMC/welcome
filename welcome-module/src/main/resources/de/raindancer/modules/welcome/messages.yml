@@ -1,0 +1,17 @@
+# Rain's Welcome — every line it says. Override any of them in plugins/RainsCore/messages.yml.
+welcome:
+  title: "<gradient:#F6B83D:#F2843A><bold>Welcome to Hyades</bold></gradient>"
+  subtitle: "<#6EC1EA>Your adventure starts here"
+  window-title: "Welcome to Hyades"
+  window-text: "<white>Glad you found us!</white>\n\n<gray>Hyades is a survival world with guilds, jobs, skills, shops and a lot more to discover.</gray>\n\n<gray>Press the button when you are ready — you can also type <white>/skip</white> at any time.</gray>"
+  button-go: "Take me to Hyades"
+  button-go-hint: "Off to the survival world"
+  chat-hint: "<gray>Ready? <white>/skip</white> takes you to Hyades at any time.</gray>"
+  going: "<#6EC1EA>Taking you to Hyades…"
+  not-moved: "<yellow>Hyades did not take you just now — it may be restarting. Try <white>/skip</white> again in a moment.</yellow>"
+  nowhere: "<red>There is nowhere to send you yet — staff have to set the next server first.</red>"
+  only-a-player: "<red>Only a player can do that.</red>"
+  status-welcome: "<gray>You are welcomed here like a newcomer and sent on when you choose.</gray>"
+  status-stay: "<gray>You may stay here: staff and builders are never welcomed or sent on.</gray>"
+  status-off: "<gray>The welcome is switched off, or no next server is set.</gray>"
+  usage: "<gray>/welcome preview <dark_gray>— the welcome as a newcomer gets it · <gray>/welcome status"

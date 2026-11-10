@@ -1,0 +1,26 @@
+id: welcome
+title: Welcome
+summary: Where newcomers start — greeted, then off to Hyades whenever they like.
+intro: |
+  Everybody new starts here. When you are ready, the welcome window or /skip takes you on to Hyades — nothing you do here comes with you.
+icon: OAK_SAPLING
+category: Getting around
+order: 5
+module: welcome
+aliases: [welcome, skip, newcomer, start]
+keywords: [welcome, skip, start, new, tutorial, intro]
+commands: [skip, welcome]
+sections:
+  - question: How do I get to Hyades?
+    title: Going on
+    when: welcome:enabled
+    text: |
+      Press <white>Take me to Hyades</white> in the welcome window, or type {run:/skip} at any time.
+  - question: Does what I do here count?
+    title: A place of its own
+    text: |
+      No. This server keeps its own records: money, homes or anything else you try here stays here, and you start fresh on Hyades.
+  - question: What can staff do here?
+    title: For staff
+    text: |
+      {run:/welcome preview} shows the welcome as a newcomer gets it, {run:/welcome status} what happens to you here. Staff and builders are never sent on.

@@ -1,5 +1,6 @@
 package de.raindancer.modules.welcome.service;
 
+import de.raindancer.core.platform.proxy.Handoff;
 import de.raindancer.core.platform.proxy.ProxyTransfer;
 import de.raindancer.core.platform.util.Scheduling;
 import de.raindancer.core.ui.dialog.DialogPage;
@@ -10,6 +11,7 @@ import de.raindancer.modules.welcome.rules.ArrivalRule.Verdict;
 import de.raindancer.modules.welcome.util.PermissionNodes;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -26,6 +28,12 @@ import java.util.function.Supplier;
  * never seen here; this server runs on a database of its own, so nothing done here follows them.
  */
 public final class WelcomeService {
+
+    /** Left with a player by the network server that sends them over, read here once. */
+    public static final NamespacedKey CAME_FOR = new NamespacedKey("rainswelcome", "came-for");
+
+    /** How long to wait for the client to say why it came — about as long as the world takes to load anyway. */
+    private static final Duration NOTE_PATIENCE = Duration.ofSeconds(3);
 
     /** How long a send may take before they are told the network did not take them. */
     private static final int PATIENCE_SECONDS = 6;
@@ -68,6 +76,20 @@ public final class WelcomeService {
         if (verdict(player) != Verdict.WELCOME) {
             return;
         }
+        Handoff.take(plugin, player, CAME_FOR, NOTE_PATIENCE).thenAccept(note -> Scheduling.entity(plugin, player, () -> {
+            TutorialService tour = tutorial;
+            if (!player.isOnline()) {
+                return;
+            }
+            if (ArrivalRule.first(note, tour != null && tour.ready()) == ArrivalRule.First.TOUR) {
+                tour.start(player);
+            } else {
+                introThenGreet(player);
+            }
+        }));
+    }
+
+    private void introThenGreet(Player player) {
         IntroService first = intro;
         if (first == null) {
             greet(player);

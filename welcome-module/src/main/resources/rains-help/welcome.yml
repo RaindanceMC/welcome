@@ -7,7 +7,7 @@ icon: OAK_SAPLING
 category: Getting around
 order: 5
 module: welcome
-aliases: [welcome, skip, newcomer, start]
+aliases: [welcome, skip, newcomer, start, tour]
 keywords: [welcome, skip, start, new, tutorial, intro, cinematic, shots]
 commands: [skip, welcome, intro, trailer, tutorial]
 sections:
@@ -29,7 +29,7 @@ sections:
     title: The tour
     when: welcome:tutorial-enabled
     text: |
-      {run:/tutorial} — your guide walks you round the island and shows you money, cosmetics, claims, homes, travel, jobs, skills, guilds and the rules. Try each thing as you go; <white>/tutorial next</white> skips a stop, {run:/skip} ends the tour and takes you to Hyades. Nothing you do here comes with you.
+      {run:/tutorial} — your guide walks you round the island and shows you money, cosmetics, claims, homes, travel, jobs, skills, guilds and the rules. Try each thing as you go; <white>/tutorial next</white> skips a stop, {run:/skip} ends the tour and takes you to Hyades. Nothing you do here comes with you. Want it again later? {run:/tutorial} on Hyades takes you back to the island, straight to your guide.
   - question: How do staff set up the tour?
     title: Setting up the tour
     text: |

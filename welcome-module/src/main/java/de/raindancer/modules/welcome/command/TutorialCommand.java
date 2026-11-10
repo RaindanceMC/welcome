@@ -1,6 +1,9 @@
 package de.raindancer.modules.welcome.command;
 
+import de.raindancer.core.platform.proxy.Handoff;
 import de.raindancer.modules.welcome.WelcomeServices;
+import de.raindancer.modules.welcome.rules.ArrivalRule;
+import de.raindancer.modules.welcome.service.WelcomeService;
 import de.raindancer.modules.welcome.store.TutorialPlaces.Place;
 import de.raindancer.modules.welcome.tutorial.Station;
 import de.raindancer.modules.welcome.tutorial.Stations;
@@ -15,7 +18,7 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 /**
- * {@code /tutorial}: starts it; {@code next} skips a station; {@code stop}. Staff: {@code start set},
+ * {@code /tutorial}: starts it — on a network server it sends the player to the welcome server, straight into the tour; {@code next} skips a station; {@code stop}. Staff: {@code start set},
  * {@code station set|remove <id>}, {@code station list}, {@code island generate}.
  */
 public final class TutorialCommand implements BasicCommand {
@@ -34,7 +37,13 @@ public final class TutorialCommand implements BasicCommand {
             return;
         }
         if (!live.onWelcomeServer()) {
-            live.messages().send(player, "welcome.only-on-welcome");
+            if (args.length == 0) {
+                Handoff.leave(player, WelcomeService.CAME_FOR, ArrivalRule.CAME_FOR_THE_TOUR);
+                live.messages().send(player, "welcome.tutorial-going");
+                live.toWelcomeServer().accept(player);
+            } else {
+                live.messages().send(player, "welcome.only-on-welcome");
+            }
             return;
         }
         String first = args.length == 0 ? "" : args[0].toLowerCase(Locale.ROOT);

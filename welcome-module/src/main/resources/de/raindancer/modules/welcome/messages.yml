@@ -31,6 +31,7 @@ welcome:
   intro-no-such: "<red>There is no such shot — see <white>/intro shot list</white>.</red>"
   intro-usage: "<gray>/intro shot add <caption> <dark_gray>— \"Title | subtitle\" · <gray>/intro shot list · remove <n> · move <from> <to> · /intro play"
   trailer-going: "<#6EC1EA>Off to the trailer…"
+  tutorial-going: "<#6EC1EA>Off to the tour with your guide…"
   trailer-none: "<yellow>There is no trailer yet.</yellow>"
   trailer-over: "<gray>That was the trailer. <white>/skip</white> takes you back to Hyades.</gray>"
   only-on-welcome: "<red>That only works on the welcome server.</red>"

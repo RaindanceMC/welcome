@@ -4,6 +4,8 @@ import de.raindancer.modules.welcome.rules.ArrivalRule.Verdict;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("what somebody arriving on the welcome server gets")
@@ -35,5 +37,19 @@ class ArrivalRuleTest {
         assertThat(ArrivalRule.stuck(1_000, 6_999, 6)).isFalse();
         assertThat(ArrivalRule.stuck(1_000, 7_000, 6)).isTrue();
         assertThat(ArrivalRule.stuck(-1, 70_000, 6)).isFalse();
+    }
+
+    @Test
+    @DisplayName("sent over by /tutorial from the network: straight into the tour, no intro")
+    void cameForTheTour() {
+        assertThat(ArrivalRule.first(Optional.of(ArrivalRule.CAME_FOR_THE_TOUR), true)).isEqualTo(ArrivalRule.First.TOUR);
+    }
+
+    @Test
+    @DisplayName("everybody else, or the tour not set up: the intro first")
+    void introFirst() {
+        assertThat(ArrivalRule.first(Optional.empty(), true)).isEqualTo(ArrivalRule.First.INTRO);
+        assertThat(ArrivalRule.first(Optional.of("something else"), true)).isEqualTo(ArrivalRule.First.INTRO);
+        assertThat(ArrivalRule.first(Optional.of(ArrivalRule.CAME_FOR_THE_TOUR), false)).isEqualTo(ArrivalRule.First.INTRO);
     }
 }

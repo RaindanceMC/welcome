@@ -86,10 +86,11 @@ public record WelcomeSettings(
         String guideName,
 
         @In("welcome") @Title("The guide's skin")
-        @Describe("A player name whose skin the guide wears, or a MineSkin skin (mineskin:<id>). Empty: a suit.")
+        @Describe("A player name whose skin the guide wears, or a MineSkin skin (mineskin:<id>). Empty: a suit. Default: an explorer.")
         @Key("guide-skin")
         String guideSkin) {
 
     public static final WelcomeSettings DEFAULTS = new WelcomeSettings("welcome", "welcome", true, "smp", 2, true,
-            true, 6, "custom", "", true, "Iris", "");
+            true, 6, "custom", "", true, "Iris",
+            "mineskin:12f8a17d9bed4948ba766f9bac3624ee");
 }

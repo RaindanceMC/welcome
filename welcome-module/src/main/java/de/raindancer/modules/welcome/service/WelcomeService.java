@@ -81,10 +81,10 @@ public final class WelcomeService {
             if (!player.isOnline()) {
                 return;
             }
-            if (ArrivalRule.first(note, tour != null && tour.ready()) == ArrivalRule.First.TOUR) {
-                tour.start(player);
-            } else {
-                introThenGreet(player);
+            switch (ArrivalRule.first(note, tour != null && tour.ready())) {
+                case QUEUE -> messages.send(player, "welcome.queue-waiting");
+                case TOUR -> tour.start(player);
+                case INTRO -> introThenGreet(player);
             }
         }));
     }

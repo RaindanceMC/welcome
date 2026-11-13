@@ -17,11 +17,16 @@ public final class ArrivalRule {
     /** What a welcomed player sees first. */
     public enum First {
         INTRO,
-        TOUR
+        TOUR,
+        /** Only waiting here for a place on a full server: the proxy moves them on by itself. */
+        QUEUE
     }
 
     /** The note /tutorial on a network server leaves with the player it sends over. */
     public static final String CAME_FOR_THE_TOUR = "tour";
+
+    /** The note RainsNetworkProxy leaves with a player it parks here while they queue for a full server. */
+    public static final String CAME_FOR_THE_QUEUE = "queue";
 
     private ArrivalRule() {
     }
@@ -43,6 +48,9 @@ public final class ArrivalRule {
 
     /** @param note what the server that sent them left with them, if anything */
     public static First first(Optional<String> note, boolean tourReady) {
+        if (note.filter(CAME_FOR_THE_QUEUE::equals).isPresent()) {
+            return First.QUEUE;
+        }
         return tourReady && note.filter(CAME_FOR_THE_TOUR::equals).isPresent() ? First.TOUR : First.INTRO;
     }
 }

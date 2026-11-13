@@ -52,4 +52,11 @@ class ArrivalRuleTest {
         assertThat(ArrivalRule.first(Optional.of("something else"), true)).isEqualTo(ArrivalRule.First.INTRO);
         assertThat(ArrivalRule.first(Optional.of(ArrivalRule.CAME_FOR_THE_TOUR), false)).isEqualTo(ArrivalRule.First.INTRO);
     }
+
+    @Test
+    @DisplayName("waiting in the proxy's queue for a full server: no intro, no tour, only a word that they are waiting")
+    void queueFirst() {
+        assertThat(ArrivalRule.first(Optional.of(ArrivalRule.CAME_FOR_THE_QUEUE), true)).isEqualTo(ArrivalRule.First.QUEUE);
+        assertThat(ArrivalRule.first(Optional.of(ArrivalRule.CAME_FOR_THE_QUEUE), false)).isEqualTo(ArrivalRule.First.QUEUE);
+    }
 }

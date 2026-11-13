@@ -10,6 +10,7 @@ welcome:
   button-tour-hint: "A short tour of the island with a guide"
   chat-hint: "<gray>Ready? <white>/skip</white> takes you to Hyades at any time.</gray>"
   going: "<#6EC1EA>Taking you to Hyades…"
+  queue-waiting: "<gray>You wait here until a place on Hyades frees up — you are moved in by yourself, your place is on the action bar. Meanwhile <white>/tutorial</white> shows you around.</gray>"
   not-moved: "<yellow>Hyades did not take you just now — it may be restarting. Try <white>/skip</white> again in a moment.</yellow>"
   nowhere: "<red>There is nowhere to send you yet — staff have to set the next server first.</red>"
   only-a-player: "<red>Only a player can do that.</red>"

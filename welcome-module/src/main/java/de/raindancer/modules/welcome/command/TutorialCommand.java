@@ -57,7 +57,12 @@ public final class TutorialCommand implements BasicCommand {
         }
         String first = args.length == 0 ? "" : args[0].toLowerCase(Locale.ROOT);
         switch (first) {
-            case "" -> live.tutorial().start(player);
+            case "" -> {
+                if (live.welcome() != null) {
+                    live.welcome().stopWaiting(player);
+                }
+                live.tutorial().start(player);
+            }
             case "next" -> live.tutorial().skipStep(player);
             case "stop" -> live.tutorial().stop(player, true);
             case "start", "station", "island" -> staff(live, player, args);

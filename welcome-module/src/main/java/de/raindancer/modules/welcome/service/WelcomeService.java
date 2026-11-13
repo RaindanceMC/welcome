@@ -43,6 +43,7 @@ public final class WelcomeService {
     private final Messages messages;
     private final LongSupplier clock;
     private final Map<UUID, Long> sentAt = new ConcurrentHashMap<>();
+    private final QueueSky sky;
     private volatile IntroService intro;
     private volatile TutorialService tutorial;
 
@@ -51,6 +52,7 @@ public final class WelcomeService {
         this.settings = settings;
         this.messages = messages;
         this.clock = clock;
+        this.sky = new QueueSky(plugin);
     }
 
     /** The intro newcomers watch first, if any. */
@@ -73,8 +75,13 @@ public final class WelcomeService {
     }
 
     public void arrived(Player player) {
+        sky.hideFrom(player);
         if (verdict(player) != Verdict.WELCOME) {
             return;
+        }
+        // Left over from a wait the server never saw end (a crash): a newcomer is no spectator.
+        if (player.getGameMode() == org.bukkit.GameMode.SPECTATOR) {
+            player.setGameMode(org.bukkit.Bukkit.getDefaultGameMode());
         }
         Handoff.take(plugin, player, CAME_FOR, NOTE_PATIENCE).thenAccept(note -> Scheduling.entity(plugin, player, () -> {
             TutorialService tour = tutorial;
@@ -82,7 +89,10 @@ public final class WelcomeService {
                 return;
             }
             switch (ArrivalRule.first(note, tour != null && tour.ready())) {
-                case QUEUE -> messages.send(player, "welcome.queue-waiting");
+                case QUEUE -> {
+                    sky.park(player);
+                    messages.send(player, "welcome.queue-waiting");
+                }
                 case TOUR -> tour.start(player);
                 case INTRO -> introThenGreet(player);
             }
@@ -144,6 +154,17 @@ public final class WelcomeService {
 
     public void left(Player player) {
         sentAt.remove(player.getUniqueId());
+        sky.release(player);
+    }
+
+    /** Where a player waiting in the queue is held, if they are. */
+    public java.util.Optional<org.bukkit.Location> waitingAt(Player player) {
+        return sky.spot(player);
+    }
+
+    /** Out of the waiting sky, e.g. to take the tour while they wait. */
+    public void stopWaiting(Player player) {
+        sky.release(player);
     }
 
     private String plain(String key) {

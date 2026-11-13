@@ -29,6 +29,36 @@ public final class WelcomeListener implements Listener {
         welcome.left(event.getPlayer());
     }
 
+    /** Waiting under the stars: they may look around, not drift off. */
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onMove(org.bukkit.event.player.PlayerMoveEvent event) {
+        if (!event.hasChangedPosition()) {
+            return;
+        }
+        welcome.waitingAt(event.getPlayer()).ifPresent(spot -> {
+            org.bukkit.Location held = spot.clone();
+            held.setYaw(event.getTo().getYaw());
+            held.setPitch(event.getTo().getPitch());
+            event.setTo(held);
+        });
+    }
+
+    /** A spectator's hotbar would take them to other players. */
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onSpectate(com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent event) {
+        if (welcome.waitingAt(event.getPlayer()).isPresent()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onSpectatorTeleport(org.bukkit.event.player.PlayerTeleportEvent event) {
+        if (event.getCause() == org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.SPECTATE
+                && welcome.waitingAt(event.getPlayer()).isPresent()) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player && welcome.protects(player)) {

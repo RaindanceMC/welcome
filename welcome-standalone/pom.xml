@@ -30,7 +30,7 @@
         <!-- 0.4.0: /tutorial on a network server sends you straight into the tour (Core 2.84.0 Handoff). -->
         <!-- 0.4.1: /tutorial island generate from the console. -->
         <!-- 0.4.2: the tutorial world loads again after a restart (Paper 26 world folders, Core 2.85.0). -->
-        <plugin.version>0.5.0</plugin.version>
+        <plugin.version>0.6.0</plugin.version>
     </properties>
 
     <dependencies>

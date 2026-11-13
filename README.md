@@ -1,7 +1,7 @@
 # RaindanceMC/welcome
 
 - **`welcome-module`** — Rain's Flexible Modules — Welcome: the welcome server. The proxy (RainsNetworkProxy `newcomers.server`) sends players the network has never seen here first; they are greeted (title + welcome window) and sent on to the network when they choose, or at once with `/skip`. Newcomers take no damage and get no hungrier here. The server runs on a database of its own, so money, homes or anything else tried here never reaches the network.
-- Players RainsNetworkProxy parks here while they queue for a full server (note `queue`) skip the intro and only hear that they are waiting; `/tutorial` still works meanwhile.
+- Players RainsNetworkProxy parks here while they queue for a full server (note `queue`) skip the intro and wait as spectators high over the island under the midnight sky, alone, free to look around (0.6.0); `/tutorial` takes them out of it onto the tour.
 - **`welcome-standalone`** — Rain's Welcome: the module and the standard wrapper, shaded together.
 
 Sending on is Core's `ProxyTransfer` (the proxy's plugin-message channel; Velocity needs `bungee-plugin-message-channel = true`), so it needs no shared database. `/skip` (`/continue`) for everyone; `/welcome preview | status` for staff (`rainswelcome.admin`). Staff and builders (`rainswelcome.stay`) are never welcomed or sent on. Settings page "Welcome server".
@@ -22,7 +22,7 @@ Needs Java 25 and read access to `packages.tstieh.de` (server ids `packages-rele
 
 ## Plugins
 
-- `welcome-standalone/target/RainsWelcome-0.5.0.jar` — needs RainsCore 2.85.0 or newer
+- `welcome-standalone/target/RainsWelcome-0.6.0.jar` — needs RainsCore 2.85.0 or newer
 
 ## Versions
 
